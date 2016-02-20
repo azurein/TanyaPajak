@@ -7,7 +7,7 @@ use Session;
 
 class SimulateController extends Controller
 {
-	public function back(){
+	public function backSimulate(){
 		$curr = Input::get("id");
 		return ["result"=>DB::table("temp_tax_qa")
 		->select("tax_qa_id", "question","answer","priority")
@@ -18,7 +18,7 @@ class SimulateController extends Controller
 		})
 		->where("stsrc","!=","D")->get()];
 	}
-	public function next(){
+	public function nextSimulate(){
 		$curr = Input::get("id");
 		$checkLast = DB::table("temp_tax_qa_detail")
 						->join("temp_tax_type","temp_tax_qa_detail.tax_type_id","=","temp_tax_type.tax_type_id")
@@ -33,6 +33,36 @@ class SimulateController extends Controller
 		else{
 			return ["endQuestion"=>false,"result"=>DB::table("temp_tax_qa")
 			->select("tax_qa_id", "question","answer","priority")
+			->where("parent_tax_qa_id",$curr)
+			->where("stsrc","!=","D")->get()];
+		}
+	}
+	public function back(){
+		$curr = Input::get("id");
+		return ["result"=>DB::table("tax_qa")
+		->select("tax_qa_id", "question","answer","priority")
+		->where("parent_tax_qa_id",function($query) use($curr){
+			$query
+				->select("parent_tax_qa_id")
+				->from("temp_tax_qa")->where("tax_qa_id",$curr);
+		})
+		->where("stsrc","!=","D")->get()];
+	}
+	public function next(){
+		$curr = Input::get("id");
+		$checkLast = DB::table("tax_qa_detail")
+						->join("tax_type","tax_qa_detail.tax_type_id","=","tax_type.tax_type_id")
+						->select("tax_qa_detail.tax_type_id","tax_qa_detail.nominal","tax_qa_detail.percentage","tax_type.tax_type_name")
+						->where("tax_type.stsrc","!=","D")
+						->where("tax_qa_detail.stsrc","!=","D")
+						->where("tax_qa_detail.tax_qa_id",$curr)
+						->get();
+		if(count($checkLast)>0){
+			return ["endQuestion"=>true,"result"=>$curr];
+		}
+		else{
+			return ["endQuestion"=>false,"result"=>DB::table("tax_qa")
+			->select("tax_qa_id", "question","answer","priority","parent_tax_qa_id")
 			->where("parent_tax_qa_id",$curr)
 			->where("stsrc","!=","D")->get()];
 		}
@@ -68,12 +98,12 @@ class SimulateController extends Controller
 			"edit_by"=>Session::get("user_id"),
 			"edit_at"=>DB::raw("NOW()")
 		]);
-		$checkLast = DB::table("temp_tax_qa_detail")
-						->join("temp_tax_type","temp_tax_qa_detail.tax_type_id","=","temp_tax_type.tax_type_id")
-						->select("temp_tax_qa_detail.tax_type_id","temp_tax_qa_detail.nominal","temp_tax_qa_detail.percentage","temp_tax_type.tax_type_name")
-						->where("temp_tax_type.stsrc","!=","D")
-						->where("temp_tax_qa_detail.stsrc","!=","D")
-						->where("temp_tax_qa_detail.tax_qa_id",$curr)
+		$checkLast = DB::table("tax_qa_detail")
+						->join("tax_type","tax_qa_detail.tax_type_id","=","tax_type.tax_type_id")
+						->select("tax_qa_detail.tax_type_id","tax_qa_detail.nominal","tax_qa_detail.percentage","tax_type.tax_type_name")
+						->where("tax_type.stsrc","!=","D")
+						->where("tax_qa_detail.stsrc","!=","D")
+						->where("tax_qa_detail.tax_qa_id",$curr)
 						->get();
 		return ["result"=>$checkLast];
 	}

@@ -79,7 +79,13 @@ class PendataanController extends Controller
 		}		
 		if(empty($tax)){
 			$tax = 0;
-		}		
+		}
+		else if(!ctype_digit($tax)){
+			return Response::json(array(
+				'error' => false,
+				'message' => "Tax must be number")
+			);
+		}
 		$searchId = DB::select('SELECT tax_type_id FROM temp_tax_type WHERE stsrc = ? AND tax_type_name = ?', ["A",$type]);
 		$update = DB::update('UPDATE temp_tax_type SET tax_type_descr=?,is_shown=?,percentage=?,stsrc=?,edit_by=?,edit_at=NOW() WHERE tax_type_id=?', [$desc,$shown,$tax,"A",Session::get("user_id"),$searchId[0]->tax_type_id]);
 		if(!$update){

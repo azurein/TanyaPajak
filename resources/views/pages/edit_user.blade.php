@@ -38,11 +38,11 @@
 		<label>Confirm Password</label>
 		<input id="confirmpassTxt" type="password" class="form-control" placeholder="">
 	</div>
+	<div class="alert alert-success hide" id="successMessage"></div>
+	<div class="alert alert-danger hide" id="warningMessage"></div>
 </form>
 <div class="form-group">
 	<button type="button" class="btn btn-default" onclick="location.href='{{ URL::to('admin/user') }}';">Back</button>
 	<button type="button" class="btn btn-default" onclick="editUser();">Save</button>
 </div>
-<div class="alert alert-success hide" id="successMessage"></div>
-<div class="alert alert-danger hide" id="warningMessage"></div>
 @stop

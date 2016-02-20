@@ -30,15 +30,16 @@
 						tax:$("[name='percent']",this).val(),
 						shown:$("[name='shown']",this).prop("checked")?"1":"0"
 					},
+				source:this,
 				type:"POST",
 				success:function(data){
 					if(data.error){
-						$("#warningMessage").addClass("hide");
-						$("#successMessage").text(data.message).removeClass("hide");
+						$("#warningMessage",this.source).addClass("hide");
+						$("#successMessage",this.source).text(data.message).removeClass("hide");
 					}
 					else{
-						$("#successMessage").addClass("hide");
-						$("#warningMessage").text(data.message).removeClass("hide");
+						$("#successMessage",this.source).addClass("hide");
+						$("#warningMessage",this.source).text(data.message).removeClass("hide");
 					}
 				}
 			})

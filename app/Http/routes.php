@@ -54,6 +54,8 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth.basic'), function()
 });
 Route::group(array('prefix' => 'api', 'before' => 'auth.basic'), function()
 {	
+	Route::post("simulasi/backSimulate","SimulateController@backSimulate");
+	Route::post("simulasi/nextSimulate","SimulateController@nextSimulate");
 	Route::post("simulasi/back","SimulateController@back");
 	Route::post("simulasi/next","SimulateController@next");
 	Route::post("simulasi/loadTax","SimulateController@loadTax");

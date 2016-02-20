@@ -6,63 +6,79 @@
 	var first = 0;
 	var lastQa;
 	var userId;
+	function loadNext(parent){
+		lastQa = $(parent).data("id");
+		$.ajax({
+			headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
+			url:"{{URL::to('api/simulasi/next')}}",
+			data:"id="+$(parent).data("id"),
+			type:"POST",
+			success:function(data){
+				if(data.endQuestion){
+					$.ajax({
+						headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
+						url:"{{URL::to('api/simulasi/loadTaxClient')}}",
+						data:{
+							user:userId,
+							qaId:lastQa,
+							typeId:data.result,
+							val:$("#totalTransaction").val(),
+							type:$("#transactionName").val(),
+						},
+						type:"POST",
+						success:function(data){
+							var inc = 0;
+							var totalTransaction = parseInt($("#totalTransaction").val());
+							$("#transactionType").text($("#transactionName").val());
+							$("#transactionTotal").text(("Rp "+(totalTransaction+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-"));
+							$("#taxContainer").empty();
+							for(var i=0;i<data.result.length;i++){
+								inc = Math.round((totalTransaction*parseInt(data.result[i].percentage)/100+parseInt(data.result[i].nominal))*100)/100;
+								$("#taxContainer").append($("<h5 class='col-md-6'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
+								$("#taxContainer").append($("<h5 class='col-md-6'>Rp "+(inc+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-</h5>"));
+								totalTransaction += inc;
+							}
+							$("#total").text("Rp "+(totalTransaction+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-");
+							$("#questionForm").addClass("hide");
+							$("#calculateForm").removeClass("hide");
+							$("[con='calculateForm']").addClass("linknow").removeAttr("id");
+						}
+					})
+				}
+				else{
+					loadQuestion(data.result);
+				}
+			}
+		})
+	}
 	function loadQuestion(qa){
 		$("#answerList").empty();
 		$("#questionText").empty();
 		currParent = qa[0].parent_tax_qa_id;
 		$("#questionText").text(qa[0].question);
+		var newQuestion = $('<a class="linknow questionLink"><li ans="'+currParent+'">'+qa[0].question+'?</li></a>');
+		newQuestion.data("id",currParent);
+		newQuestion.click(function(){
+			$("form").addClass("hide");
+			$("#questionForm").removeClass("hide");
+			$("[con='calculateForm']").attr("id","linknext").removeClass("linknow");
+			$(this).nextAll(".questionLink").remove();
+			loadNext(this);
+			$(this).remove();
+		});
+		$("ol a:last").before(newQuestion);
 		for(var i=0;i<qa.length;i++){
 			var newAnswer = $("<a class='list-group-item'>"+qa[i].answer+"</a>");
 			newAnswer.click(function(e){
-				lastQa = $(this).data("id");
-				$.ajax({
-					headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
-					url:"{{URL::to('api/simulasi/next')}}",
-					data:"id="+$(this).data("id"),
-					type:"POST",
-					success:function(data){
-						if(data.endQuestion){
-							$.ajax({
-								headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
-								url:"{{URL::to('api/simulasi/loadTaxClient')}}",
-								data:{
-									user:userId,
-									qaId:lastQa,
-									typeId:data.result,
-									val:$("#totalTransaction").val(),
-									type:$("#transactionName").val(),
-								},
-								type:"POST",
-								success:function(data){
-									var inc = 0;
-									var totalTransaction = parseInt($("#totalTransaction").val());
-									$("#transactionType").text($("#transactionName").val());
-									$("#transactionTotal").text(totalTransaction);
-									for(var i=0;i<data.result.length;i++){
-										inc = totalTransaction*parseInt(data.result[i].percentage)/100+parseInt(data.result[i].nominal);
-										$("#taxContainer").append($("<h5 class='col-md-6'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
-										$("#taxContainer").append($("<h5 class='col-md-6'>Rp "+(inc+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-</h5>"));
-										totalTransaction += inc;
-									}
-									$("#total").text("Rp "+(totalTransaction+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-");
-									$("#questionForm").addClass("hide");
-									$("#calculateForm").removeClass("hide");
-									$("con='calculateForm'").addClass("linknow").removeAttr("id");
-								}
-							})
-						}
-						else{
-							loadQuestion(data.result);
-						}
-					}
-				})
+				$("li[ans='"+$(this).data("parent")+"']").append($(this).text());
+				loadNext(this);
 			});
 			newAnswer.data("id",qa[i].tax_qa_id);
+			newAnswer.data("parent",qa[i].parent_tax_qa_id);
 			$("#answerList").append(newAnswer);
 		}
 	}
-	function firstLoad(){		
-		var qa = {!! $QA !!};
+	function firstLoad(){
 		var gender = {!! $gender !!};
 		var domicile = {!! $domicile !!};
 		for(var i=0;i<gender.length;i++){
@@ -92,13 +108,18 @@
 				}
 			}
 		}
-		loadQuestion(qa);
 	}
 	$(document).ready(function(){
 		firstLoad();
 		$("#resetBtn").click(function(){
-			$("#profileForm input").val("");
+			$("#profileForm").closest("div").find("input").val("");
 			$("#saveOpt").prop("checked",false);
+			document.cookie = "save=''";
+			document.cookie = "email=''";
+			document.cookie = "name=''";
+			document.cookie = "gender=''";
+			document.cookie = "dateBirth=''";
+			document.cookie = "domicile=''";
 		})
 		$("#nextProfileBtn").click(function(){
 			var saveOpt = $("#saveOpt").prop("checked");
@@ -140,6 +161,7 @@
 			$("#profileForm").removeClass("hide");
 		})
 		$("#nextTransactionBtn").click(function(){
+			var qa = {!! $QA !!};
 			var type = $("#transactionName").val();
 			var total = $("#totalTransaction").val();
 			if(type==""||total==""){
@@ -152,7 +174,8 @@
 			}
 			$("#transactionForm").addClass("hide");
 			$("#questionForm").removeClass("hide");
-			$("[con='questionForm']").addClass("linknow").removeAttr("id");
+			$("[con='questionForm']").remove();
+			loadQuestion(qa);
 		})
 		$("#backCalculate").click(function(){
 			$("#calculateForm").addClass("hide");
@@ -173,6 +196,9 @@
 			defaultViewDate:new Date()
 		});
 		$("ol").on("click",".linknow",function(){
+			if($(this).hasClass("questionLink")){
+				return;
+			}
 			var curr = $(this);
 			while(curr.length>0){				
 				curr = $(curr).next();

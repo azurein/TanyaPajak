@@ -22,12 +22,12 @@
 	<div class="form-group">
 		<label class="checkbox-inline"><input name="shown" type="checkbox" value="">Shown in Dictionary?</label>
 	</div><br>
+	<div class="alert alert-success hide" id="successMessage"></div>
+	<div class="alert alert-danger hide" id="warningMessage"></div>
 </form>
 
 <div class="form-group">
 	<button type="button" class="btn btn-default" onclick="location.href='{{ URL::to('/admin/pendataan') }}';">Back</button>
 	<button type="button" class="btn btn-default" onclick="editPendataan();">Save</button>
 </div>
-<div class="alert alert-success hide" id="successMessage"></div>
-<div class="alert alert-danger hide" id="warningMessage"></div>
 @stop

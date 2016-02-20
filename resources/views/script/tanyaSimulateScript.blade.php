@@ -26,7 +26,7 @@
 				else{
 					$.ajax({
 						headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
-						url:"{{URL::to('api/simulasi/prev')}}",
+						url:"{{URL::to('api/simulasi/backSimulate')}}",
 						data:"id="+qa[0].parent_tax_qa_id,
 						type:"POST",
 						success:function(data){
@@ -45,7 +45,7 @@
 				else{
 					$.ajax({
 						headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
-						url:"{{URL::to('api/simulasi/next')}}",
+						url:"{{URL::to('api/simulasi/nextSimulate')}}",
 						data:"id="+$(".active").data("id"),
 						type:"POST",
 						success:function(data){

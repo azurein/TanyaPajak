@@ -1,6 +1,9 @@
 @section("script")
 <script>
 	$(document).ready(function(){
+		$("#searchButton").click(function(){
+			$("form").submit();
+		})
 		$("form").submit(function(e){
 			e.preventDefault();
 			$.ajax({

@@ -20,7 +20,7 @@
 			appendOnClick();
 		}
 		for(var i=0;i<listType.length;i++){
-			$("#typeList").append($("<option value='"+listType[i].tax_type_id+"'>"+listType[i].tax_type_name+"</option>"));
+			$("#typeList").append($("<option value='"+listType[i].tax_type_id+"'>"+listType[i].tax_type_name+"</option>").attr("percent",listType[i].percentage));
 		}
 		for(var i=0;i<qa.length;i++){
 			if($("#qText").val() == ""){
@@ -47,6 +47,9 @@
 			$("button",newType).css("visibility","hidden").removeAttr("id");
 			$(".typeNum",newType).text($(".typeItem").length+1);
 			$("input",newType).val("");
+			$("#typeList",newType).change(function(e){
+				$("#percent",$(this).closest(".typeItem")).val($("option:selected",this).attr("percent"));
+			})
 			$("#typeList option:first",newType).prop("selected",true);
 			$(this).closest(".typeItem").append($("button",newType).closest(".col-md-3"));
 			$(newType).append($(this).closest(".col-md-3"));
