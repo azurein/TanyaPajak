@@ -34,8 +34,8 @@
 							$("#taxContainer").empty();
 							for(var i=0;i<data.result.length;i++){
 								inc = Math.round((totalTransaction*parseInt(data.result[i].percentage)/100+parseInt(data.result[i].nominal))*100)/100;
-								$("#taxContainer").append($("<h5 class='col-md-6'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
-								$("#taxContainer").append($("<h5 class='col-md-6'>Rp "+(inc+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-</h5>"));
+								$("#taxContainer").append($("<a href='{{URL::to("/kamus/")}}?key="+data.result[i].tax_type_name+"'><h5 class='col-md-6'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
+								$("#taxContainer").append($("<h5 class='col-md-6'>Rp "+(inc+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-</h5></a>"));
 								totalTransaction += inc;
 							}
 							$("#total").text("Rp "+(totalTransaction+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-");
@@ -111,9 +111,39 @@
 	}
 	$(document).ready(function(){
 		firstLoad();
+		$("#roleForm").submit(function(e){
+			e.preventDefault();			
+			$.ajax({
+				headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
+				url:"{{URL::to('api/data/searchRole')}}",
+				data:{
+					Keyword:$("input",this).val()
+				},
+				type:"GET",
+				success:function(data){
+					$("#roleList .roleItem");
+					for(var i=0;i<data.result.length;i++){
+						var newRole = $("<a class='list-group-item roleItem'>"+data.result[i].role_name+"</a>")
+										.data("id",data.result[i].role_id);
+						newRole.click(function(){
+							document.cookie = "role="+$(this).data("id");
+							$("#roleForm").addClass("hide");
+							$("#transactionForm").removeClass("hide");
+							$("[con='transactionForm']").addClass("linknow").removeAttr("id");
+						})
+						$("#roleList").append(newRole);
+					}
+				}
+			})
+		});
+		$("#searchButton").click(function(){
+			$(this).closest("form").submit();
+		})
 		$("#resetBtn").click(function(){
+			if(!confirm("Are you sure?"))return;
 			$("#profileForm").closest("div").find("input").val("");
 			$("#saveOpt").prop("checked",false);
+			document.cookie = "role=''";
 			document.cookie = "save=''";
 			document.cookie = "email=''";
 			document.cookie = "name=''";
@@ -146,9 +176,10 @@
 					userId = data.id;
 					if(data.error){
 						$("#warningMessage").addClass("hide");
-						$("#transactionForm").removeClass("hide");
+						$("#roleForm input").val("");
+						$("#roleForm").removeClass("hide").submit();
 						$("#profileForm").addClass("hide");
-						$("[con='transactionForm']").addClass("linknow").removeAttr("id");
+						$("[con='roleForm']").addClass("linknow").removeAttr("id");
 					}
 					else{
 						$("#warningMessage").text(data.message).removeClass("hide");
@@ -204,7 +235,7 @@
 				curr = $(curr).next();
 				$(curr).attr("id","linknext");
 			}
-			$("form").addClass("hide");
+			$("form:not(.searchRole)").addClass("hide");
 			$("#"+$(this).attr("con")).removeClass("hide");
 		})
 	})

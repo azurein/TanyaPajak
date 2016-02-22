@@ -62,6 +62,7 @@ Route::group(array('prefix' => 'api', 'before' => 'auth.basic'), function()
 	Route::post("simulasi/loadTaxClient","SimulateController@loadTaxClient");
 	Route::post("simulasi/publish","SimulateController@publish");
 	Route::get("data/role","DataController@role");
+	Route::get("data/searchRole","DataController@searchRole");
 	Route::get("data/tax_qa","DataController@tax_qa");
 	Route::get("data/tax_qa_detail","DataController@tax_qa_detail");
 	Route::get("data/tax_type","DataController@tax_type");
@@ -81,6 +82,8 @@ Route::group(array('prefix' => 'api', 'before' => 'auth.basic'), function()
 	Route::post('user/loadUser', 'UserController@loadUser');
 	Route::post('user/edit', 'UserController@edit');
 	Route::post('user/delete', 'UserController@delete');
+	Route::post('konfigurasi/delQ', 'KonfigurasiController@delQ');
+	Route::post('konfigurasi/delType', 'KonfigurasiController@delType');
 	Route::post('konfigurasi/add', 'KonfigurasiController@add');
 	Route::post('konfigurasi/edit', 'KonfigurasiController@edit');
 	Route::post('konfigurasi/delQuestion', 'KonfigurasiController@deleteQuestion');

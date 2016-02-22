@@ -26,7 +26,8 @@
 		<label>Answer <span class="answerNum"></span></label>
 		<div class="input-group">
 			<input type="text" class="form-control iInput" aria-describedby="basic-addon1" />
-			<span class="input-group-addon iAction actionIcon"><i class="fa fa-plus"></i></span>
+			<span class="input-group-addon iActionPlus" style="cursor:pointer"><i class="fa fa-plus"></i></span>
+			<span class="input-group-addon iActionMinus" style="cursor:pointer"><i class="fa fa-minus"></i></span>
 		</div>
 	</div>
 </div>
@@ -51,7 +52,10 @@
 						</div>
 						<div class="col-md-3">
 							<div class="form-group" style="line-height: 83px; padding-left:10px;">
-								<button id="newType" type="button" class="btn btn-default">Add New</button>
+								<div class="btn-group">
+									<button id="newType" type="button" class="btn btn-default"><i class="fa fa-plus"></i></button>
+									<button id="delType" type="button" class="btn btn-default"><i class="fa fa-minus"></i></button>
+								</div>
 							</div>
 						</div>
 					</div>

@@ -75,6 +75,46 @@ class KonfigurasiController extends Controller
 			200
 		);
 	}
+	public function delQ(){
+		$delNum = Input::get("listQ");
+		$delete = DB::table("temp_tax_qa")->whereIn("tax_qa_id",$delNum)->update([
+						'stsrc' => "D",
+						'edit_by'=>Session::get("user_id"),
+						'edit_at'=>DB::raw("NOW()")]);
+		if(!$delete){
+			return Response::json(array(
+				'error' => false,
+				'message' => "An unknown error has occurred")
+			);
+		}
+		else{
+			return Response::json(array(
+				'error' => true,
+				'message' => "Data has been updated"),
+				200
+			);
+		}
+	}
+	public function delType(){
+		$delNum = Input::get("listType");
+		$delete = DB::table("temp_tax_qa_detail")->whereIn("tax_qa_detail_id",$delNum)->update([
+						'stsrc' => "D",
+						'edit_by'=>Session::get("user_id"),
+						'edit_at'=>DB::raw("NOW()")]);
+		if(!$delete){
+			return Response::json(array(
+				'error' => false,
+				'message' => "An unknown error has occurred")
+			);
+		}
+		else{
+			return Response::json(array(
+				'error' => true,
+				'message' => "Data has been updated"),
+				200
+			);
+		}
+	}
 	public function deleteQuestion(){
 		$delNum = Input::get("delNum");
 		$delete = DB::table("temp_tax_qa")->where("parent_tax_qa_id",$delNum)->update([

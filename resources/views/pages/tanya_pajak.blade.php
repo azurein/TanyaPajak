@@ -47,12 +47,14 @@
 						<div class="page-header" style="border: none; padding-bottom: 0px;">
 							<h4 style="text-align: left;">Data Pekerjaan</h4>
 						</div>
-						<form>
-							<div class="input-group">
-									<input type="text" class="form-control" aria-describedby="basic-addon1" placeholder="Masukkan kata pencarian...">
-									<span class="input-group-addon" style="cursor:pointer" id="searchButton"><i class="fa fa-search"></i></span>
+						<div class="input-group">
+								<input type="text" class="form-control" aria-describedby="basic-addon1" placeholder="Masukkan kata pencarian...">
+								<span class="input-group-addon" style="cursor:pointer" id="searchButton"><i class="fa fa-search"></i></span>
+						</div>
+						<div class="input-group">
+							<div class="list-group" id="roleList">
 							</div>
-						</form>
+						</div>
 					</form>
 					<form id="transactionForm" class="hide">
 						<div class="page-header" style="border: none; padding-bottom: 0px;">
@@ -117,7 +119,7 @@
 				<div class="row vertical-center-row" style="margin: 0; border: none;">
 					<ol>
 						<a class="linknow" con="profileForm"><li>Pengisian Data Diri</li></a>
-						<!--a id="linknext" con="roleForm"><li>Pilih Pekerjaan</li></a-->
+						<a id="linknext" con="roleForm"><li>Pilih Pekerjaan</li></a>
 						<a id="linknext" con="transactionForm"><li>Pengisian Data Transaksi</li></a>
 						<a id="linknext" con="questionForm"><li>Tanya Jawab Pajak</li></a>
 						<a id="linknext" con="calculateForm"><li>Kalkulasi Pajak</li></a>

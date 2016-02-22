@@ -26,6 +26,20 @@ class DataController extends Controller
 		->where("role_id",">","0")
 		->orderBy('role_name')->get()];
 	}
+	public function searchRole(){
+		$keyWord = explode(" ",Input::get("Keyword"));
+		return ["result"=>DB::table("role")
+		->select("role_id", "role_name")
+		->where(function($query) use($keyWord){
+			if(count($keyWord)==1 && empty($keyWord[0]))return;
+			for($i=0;$i<count($keyWord);$i++){
+				$query->where('role_name',"like","%".$keyWord[$i]."%","or");				
+			}
+		})
+		->where("stsrc","!=","D")
+		->where("role_id",">","0")
+		->orderBy('role_name')->get()];
+	}
 	public function tax_qa(){
 		return ["result"=>DB::table("tax_qa")
 		->select("tax_qa_id", "parent_tax_qa_id", "question", "answer", "priority")

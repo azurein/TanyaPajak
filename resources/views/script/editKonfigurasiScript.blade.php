@@ -6,13 +6,49 @@
 	var listQA = {!! $listQA !!};
 	var listType = {!! $listType !!};
 	var mapQA = {};
+	var listDelType = [];
+	var listDelQ = [];
+	function appendType(){
+		var newType = $(this).closest(".typeItem").clone().removeAttr("detailId");
+		$(".typeNum",newType).text($(".typeItem").length+1);
+		$("input",newType).val("");
+		$("#typeList",newType).change(function(e){
+			$("#percent",$(this).closest(".typeItem")).val($("option:selected",this).attr("percent"));
+		})
+		$("#typeList option:first",newType).prop("selected",true);
+		$("#newType",newType).click(appendType);
+		$("#delType",newType).click(delType);
+		$("#typeContainer").append(newType);
+	}
+	function delType(){
+		if($(".typeItem:visible").length<=1)return;
+		if($(this).closest(".typeItem").attr("detailid")){
+			listDelType.push($(this).closest(".typeItem").attr("detailid"));
+		}
+		$(this).closest(".typeItem").remove();		
+		$(".typeItem").each(function(i){
+			$(".typeNum",this).text(i+1);
+		})
+	}
 	function appendOnClick(e){
 		var newAnswer = $("#answerTemplate").clone().removeClass("hide").removeAttr("id");
 		$(".answerNum",newAnswer).text($(".answerContainer").length);
 		$(".iInput",newAnswer).attr("placeholder","New Answer "+$(".answerContainer").length).focus();
-		$(".iAction",newAnswer).click(appendOnClick);
+		$(".iActionPlus",newAnswer).click(appendOnClick);
+		$(".iActionMinus",newAnswer).click(deleteOnClick);
 		$(".answerContainer:last").after(newAnswer);
 		return newAnswer;
+	}
+	function deleteOnClick(e){
+		if($(".answerContainer:visible").length<=1)return;
+		if($(this).closest(".answerContainer").attr("qa_id")){
+			listDelQ.push($(this).closest(".answerContainer").attr("qa_id"));
+		}
+		$(this).closest(".answerContainer").remove();
+		$(".answerContainer:visible").each(function(i){
+			$(".answerNum",this).text(i+1);
+			$(".iInput",this).attr("placeholder","New Answer "+(i+1)).focus();
+		})
 	}
 	$(document).ready(function(){
 		var tempQA;
@@ -42,19 +78,8 @@
 				$("#endQuestionSection").addClass("hide");
 			}
 		});
-		$("#newType").click(function(){
-			var newType = $(this).closest(".typeItem").clone().removeAttr("detailId");
-			$("button",newType).css("visibility","hidden").removeAttr("id");
-			$(".typeNum",newType).text($(".typeItem").length+1);
-			$("input",newType).val("");
-			$("#typeList",newType).change(function(e){
-				$("#percent",$(this).closest(".typeItem")).val($("option:selected",this).attr("percent"));
-			})
-			$("#typeList option:first",newType).prop("selected",true);
-			$(this).closest(".typeItem").append($("button",newType).closest(".col-md-3"));
-			$(newType).append($(this).closest(".col-md-3"));
-			$("#typeContainer").append(newType);
-		})
+		$("#newType").click(appendType);
+		$("#delType").click(delType);
 		$("#saveBtn").click(function(){
 			var data = {};
 			switch(param){
@@ -90,7 +115,6 @@
 						$(".answerContainer:visible").each(function(i,e){
 							data.answer.push($(".iInput",this).val());
 						});
-						console.log(data);
 						$.ajax({
 							headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
 							url:"{{URL::to('api/konfigurasi/add')}}",
@@ -110,7 +134,42 @@
 					}
 				break;
 				case 1:
-					console.log("save");
+					if(listDelQ.length>0){
+						$.ajax({
+							headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
+							url:"{{URL::to('api/konfigurasi/delQ')}}",
+							data:{"listQ":listDelQ},
+							type:"POST",
+							success:function(data){
+								if(data.error){
+									$("#warningMessage").addClass("hide");
+									$("#successMessage").text(data.message).removeClass("hide");
+								}
+								else{
+									$("#successMessage").addClass("hide");
+									$("#warningMessage").text(data.message).removeClass("hide");
+								}
+							}
+						})
+					}
+					if(listDelType.length>0){
+						$.ajax({
+							headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
+							url:"{{URL::to('api/konfigurasi/delType')}}",
+							data:{"listType":listDelType},
+							type:"POST",
+							success:function(data){
+								if(data.error){
+									$("#warningMessage").addClass("hide");
+									$("#successMessage").text(data.message).removeClass("hide");
+								}
+								else{
+									$("#successMessage").addClass("hide");
+									$("#warningMessage").text(data.message).removeClass("hide");
+								}
+							}
+						})
+					}
 					if($("#endAnswer").prop("checked")){
 						$(".typeItem").each(function(){
 							data.question = $("#aChoise").val();
@@ -118,7 +177,6 @@
 							data.percent = $("#percent",this).val();
 							data.nominal = $("#nominal",this).val();
 							if($(this).attr("detailId")){
-								console.log("edit");
 								data.detailId = $(this).attr("detailId");
 								$.ajax({
 									headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
@@ -138,14 +196,12 @@
 								})
 							}
 							else{
-								console.log(data);
 								$.ajax({
 									headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
 									url:"{{URL::to('api/konfigurasi/finish')}}",
 									data:data,
 									type:"POST",
 									success:function(data){
-								console.log(data);
 										if(data.error){
 											$("#warningMessage").addClass("hide");
 											$("#successMessage").text(data.message).removeClass("hide");
@@ -259,11 +315,14 @@
 					else{
 						$("#endAnswer").prop("checked",true).trigger("click");
 						if(data.child.length>0){
+							$(".answerContainer:visible:not(:first)").remove();
 							for(var i=0;i<data.child.length;i++){
+								console.log($(".answerContainer:last"));
 								$(".answerContainer:last").attr("qa_id",data.child[i].tax_qa_id);
 								$(".answerContainer:last .iInput").val(data.child[i].answer);
 								$("#qText").val(data.child[i].question);
-								if($(".answerContainer:visible").length<data.child.length)$(".answerContainer:last .iAction").click();
+								if($(".answerContainer:visible").length<data.child.length)
+									$(".answerContainer:last .iActionPlus").click();
 							}
 						}
 					}

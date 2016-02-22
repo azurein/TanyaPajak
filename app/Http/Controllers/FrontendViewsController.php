@@ -19,7 +19,7 @@ class FrontendViewsController extends Controller
 		return view('pages.home');
 	}
 	public function kamus(){
-		return view('pages.kamus');
+		return view('pages.kamus')->with("keyword",Input::get("key"));
 	}
 	public function tanyaPajak(){
 		$QA = DB::table("tax_qa")->select("parent_tax_qa_id","tax_qa_id","question","answer","priority")
