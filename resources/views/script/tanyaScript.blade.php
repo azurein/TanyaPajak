@@ -6,13 +6,14 @@
 	var first = 0;
 	var lastQa;
 	var userId;
-	function loadNext(parent){
+	function loadNext(parent,nextObj){
 		lastQa = $(parent).data("id");
 		$.ajax({
 			headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
 			url:"{{URL::to('api/simulasi/next')}}",
 			data:"id="+$(parent).data("id"),
 			type:"POST",
+			next:nextObj,
 			success:function(data){
 				if(data.endQuestion){
 					$.ajax({
@@ -46,12 +47,12 @@
 					})
 				}
 				else{
-					loadQuestion(data.result);
+					loadQuestion(data.result,this.next);
 				}
 			}
 		})
 	}
-	function loadQuestion(qa){
+	function loadQuestion(qa,next){
 		$("#answerList").empty();
 		$("#questionText").empty();
 		currParent = qa[0].parent_tax_qa_id;
@@ -62,15 +63,23 @@
 			$("form").addClass("hide");
 			$("#questionForm").removeClass("hide");
 			$("[con='calculateForm']").attr("id","linknext").removeClass("linknow");
-			$(this).nextAll(".questionLink").remove();
-			loadNext(this);
+			$(this).nextAll(".questionLink").attr("id","linknext").removeClass("linknow");
+			$(this).nextAll(".questionLink").find(".userData").remove();
+			loadNext(this,$(this).next());
+			$(this).prevAll("")
 			$(this).remove();
 		});
-		$("ol a:last").before(newQuestion);
+		if(next){
+			$(next).before(newQuestion);
+		}
+		else{
+			$("ol a:last").before(newQuestion);
+		}
 		for(var i=0;i<qa.length;i++){
 			var newAnswer = $("<a class='list-group-item'>"+qa[i].answer+"</a>");
 			newAnswer.click(function(e){
-				$("li[ans='"+$(this).data("parent")+"']").append($(this).text());
+				$("li[ans='"+$(this).data("parent")+"']").append($("<span class='userData'> "+$(this).text()+"</span>"));
+				$("li[ans='"+$(this).data("parent")+"']").closest("a").next(".questionLink").remove();
 				loadNext(this);
 			});
 			newAnswer.data("id",qa[i].tax_qa_id);
@@ -121,7 +130,7 @@
 				},
 				type:"GET",
 				success:function(data){
-					$("#roleList .roleItem");
+					$("#roleList .roleItem").remove();
 					for(var i=0;i<data.result.length;i++){
 						var newRole = $("<a class='list-group-item roleItem'>"+data.result[i].role_name+"</a>")
 										.data("id",data.result[i].role_id);
@@ -130,6 +139,8 @@
 							$("#roleForm").addClass("hide");
 							$("#transactionForm").removeClass("hide");
 							$("[con='transactionForm']").addClass("linknow").removeAttr("id");
+							$("[con='roleForm'] .userData").remove();
+							$("[con='roleForm'] li").append($("<span class='userData'> "+$(this).text()+"</span>"));
 						})
 						$("#roleList").append(newRole);
 					}
@@ -188,8 +199,10 @@
 			});
 		})
 		$("#backTransactionBtn").click(function(){
+			$("#warningMessage").addClass("hide");
 			$("#transactionForm").addClass("hide");
-			$("#profileForm").removeClass("hide");
+			$("#roleForm").removeClass("hide");
+			$("[con='transactionForm']").attr("id","linknext").removeClass("linknow");
 		})
 		$("#nextTransactionBtn").click(function(){
 			var qa = {!! $QA !!};
@@ -203,16 +216,21 @@
 				$("#warningMessage").removeClass("hide").text("Total transaction must be a number");
 				return;
 			}
+			$("#warningMessage").addClass("hide");
 			$("#transactionForm").addClass("hide");
 			$("#questionForm").removeClass("hide");
 			$("[con='questionForm']").remove();
+			$("[con='transactionForm'] .userData").remove();
+			$("[con='transactionForm'] li").append($("<span class='userData'> "+type+" : "+total+" </span>"));
 			loadQuestion(qa);
 		})
 		$("#backCalculate").click(function(){
-			$("#calculateForm").addClass("hide");
-			$("#profileForm").removeClass("hide");
+			$(".questionLink:last").click();
 		})
 		$("#resetCalculate").click(function(){
+			$(".questionLink").remove();
+			$("[con='calculateForm']").removeClass("linknow").attr("id","linknext");
+			$("[con='transactionForm']").after($('<a id="linknext" con="questionForm"><li>Tanya Jawab Pajak</li></a>'));
 			$("#saveOpt").prop("checked",false);
 			$("#emailProfile").val("");
 			$("#nameProfile").val("");
@@ -227,15 +245,22 @@
 			defaultViewDate:new Date()
 		});
 		$("ol").on("click",".linknow",function(){
-			if($(this).hasClass("questionLink")){
+			if($(this).hasClass("questionLink")||$(this).attr("id") == "linknext"){
 				return;
 			}
+			$('[con="questionForm"]').remove();
 			var curr = $(this);
 			while(curr.length>0){				
 				curr = $(curr).next();
 				$(curr).attr("id","linknext");
+				$(".userData",curr).remove();
 			}
-			$("form:not(.searchRole)").addClass("hide");
+			if(!$(this).is("[con='calculateForm']")){				
+				$(".questionLink").remove();
+				$("[con='calculateForm']").removeClass("linknow").attr("id","linknext");
+				$("[con='transactionForm']").after($('<a id="linknext" con="questionForm"><li>Tanya Jawab Pajak</li></a>'));
+			}
+			$("form").addClass("hide");
 			$("#"+$(this).attr("con")).removeClass("hide");
 		})
 	})

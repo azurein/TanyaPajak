@@ -174,8 +174,8 @@
 						$(".typeItem").each(function(){
 							data.question = $("#aChoise").val();
 							data.type = $("#typeList",this).val();
-							data.percent = $("#percent",this).val();
-							data.nominal = $("#nominal",this).val();
+							data.percent = $("#percent",this).val()==""?0:$("#percent",this).val();
+							data.nominal = $("#nominal",this).val()==""?0:$("#nominal",this).val();
 							if($(this).attr("detailId")){
 								data.detailId = $(this).attr("detailId");
 								$.ajax({
