@@ -61,6 +61,7 @@ Route::group(array('prefix' => 'api', 'before' => 'auth.basic'), function()
 	Route::post("simulasi/loadTax","SimulateController@loadTax");
 	Route::post("simulasi/loadTaxClient","SimulateController@loadTaxClient");
 	Route::post("simulasi/publish","SimulateController@publish");
+	Route::get("data/version","DataController@version");
 	Route::get("data/role","DataController@role");
 	Route::get("data/searchRole","DataController@searchRole");
 	Route::get("data/tax_qa","DataController@tax_qa");

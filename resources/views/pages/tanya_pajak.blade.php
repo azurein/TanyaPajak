@@ -115,7 +115,7 @@
 			</div>
 		</div>
 		<div class="col-md-5"><br><br><br>
-			<div class="container container-table">
+			<div class="container-table">
 				<div class="row vertical-center-row" style="margin: 0; border: none;">
 					<ol>
 						<a class="linknow" con="profileForm"><li>Pengisian Data Diri</li></a>

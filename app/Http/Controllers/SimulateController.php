@@ -72,8 +72,15 @@ class SimulateController extends Controller
 		DB::update("UPDATE tax_qa_detail SET stsrc='D',edit_by='".Session::get("user_id")."',edit_at=NOW()");
 		DB::update("UPDATE tax_type SET stsrc='D',edit_by='".Session::get("user_id")."',edit_at=NOW()");
 		DB::insert("INSERT INTO tax_qa(tax_qa_id,parent_tax_qa_id,question,answer,priority,stsrc,edit_by,edit_at) SELECT tax_qa_id,parent_tax_qa_id,question,answer,priority,'A',".Session::get('user_id').",NOW() FROM temp_tax_qa WHERE stsrc <> 'D' ");
-		DB::insert("INSERT INTO tax_qa_detail(tax_qa_id,tax_type_id,percentage,stsrc,edit_by,edit_at) SELECT tax_qa_id,tax_type_id,percentage,'A',".Session::get('user_id').",NOW() FROM temp_tax_qa_detail WHERE stsrc <> 'D' ");
+		DB::insert("INSERT INTO tax_qa_detail(tax_qa_id,tax_type_id,percentage,nominal,stsrc,edit_by,edit_at) SELECT tax_qa_id,tax_type_id,percentage,nominal,'A',".Session::get('user_id').",NOW() FROM temp_tax_qa_detail WHERE stsrc <> 'D' ");
 		DB::insert("INSERT INTO tax_type(tax_type_id,tax_type_name,tax_type_descr,percentage,is_shown,stsrc,edit_by,edit_at) SELECT tax_type_id,tax_type_name,tax_type_descr,percentage,is_shown,'A',".Session::get('user_id').",NOW() FROM temp_tax_type WHERE stsrc <> 'D'");
+		$checkExsist = DB::table("pajak_version")->select("version")->get();
+		if(count($checkExsist)>0){
+			DB::update("UPDATE pajak_version SET version=version+1");
+		}
+		else{
+			DB::insert("INSERT INTO pajak_version VALUES('1')");
+		}
 	}
 	public function loadTax(){
 		$curr = Input::get("typeId");

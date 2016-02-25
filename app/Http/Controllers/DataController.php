@@ -6,6 +6,10 @@ use Input;
 
 class DataController extends Controller
 {
+	public function version(){
+		return ["result"=>DB::table("pajak_version")
+		->select("version")->get()];
+	}
 	public function gender(){
 		return ["result"=>DB::table("gender")
 		->select("gender_id", "gender_name")
