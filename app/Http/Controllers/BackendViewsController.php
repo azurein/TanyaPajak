@@ -54,7 +54,7 @@ left join temp_tax_type d ON c.tax_type_id = d.tax_type_id AND d.stsrc="A"
 		$selectedQA = DB::table("temp_tax_qa")->select("parent_tax_qa_id","tax_qa_id","question","answer","priority")->where("stsrc","A")->whereIn("tax_qa_id",$selected)->get();
 		$selectedParent = [""];
 		if(count($selectedQA)>0)
-			$selectedParent = DB::table("temp_tax_qa")->select("tax_qa_id","question","answer")->where("stsrc","A")->where("tax_qa_id",$selectedQA[0]->parent_tax_qa_id)->get();
+			$selectedParent = DB::table("temp_tax_qa")->select("tax_qa_id","parent_tax_qa_id","question","answer")->where("stsrc","A")->where("tax_qa_id",$selectedQA[0]->parent_tax_qa_id)->get();
 		$listType = DB::table("temp_tax_type")->select("tax_type_id","tax_type_name","percentage")->where("stsrc","A")->get();
 		return view('pages.edit_konfigurasi')->with([
 			"param"=>$param,

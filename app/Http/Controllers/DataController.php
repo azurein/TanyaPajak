@@ -73,6 +73,7 @@ class DataController extends Controller
 				->where('tax_type_descr',"like","%".$keyWord[$i]."%", "or");				
 			}
 		})
+		->where("is_shown","1")
 		->where("stsrc","!=","D")
 		->orderBy('tax_type_name')->get()];
 	}

@@ -5,7 +5,7 @@
 <div class="form-group">
 	<label>Question Parent</label>
 	<select class="form-control" id="qChoise">
-		<option value="-1"></option>
+		<option value="-2"></option>
 	</select>
 </div>
 <div class="form-group">

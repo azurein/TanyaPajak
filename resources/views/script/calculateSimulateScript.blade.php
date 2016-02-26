@@ -24,7 +24,7 @@
 							inc = Math.round((totalTransaction*parseInt(data.result[i].percentage)/100+parseInt(data.result[i].nominal))*100)/100;
 							$("#taxContainer").append($("<h5 class='col-md-6'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
 							$("#taxContainer").append($("<h5 class='col-md-6'>Rp "+(inc+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-</h5>"));
-							totalTransaction += inc;
+							totalTransaction = Math.round((totalTransaction + inc) * 1e12) / 1e12;
 						}
 						$("#total").text("Rp "+(totalTransaction+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-");
 					}

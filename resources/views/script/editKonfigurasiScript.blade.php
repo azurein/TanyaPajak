@@ -317,7 +317,6 @@
 						if(data.child.length>0){
 							$(".answerContainer:visible:not(:first)").remove();
 							for(var i=0;i<data.child.length;i++){
-								console.log($(".answerContainer:last"));
 								$(".answerContainer:last").attr("qa_id",data.child[i].tax_qa_id);
 								$(".answerContainer:last .iInput").val(data.child[i].answer);
 								$("#qText").val(data.child[i].question);
@@ -331,7 +330,7 @@
 			})
 		})
 		$("#qChoise").change(function(){
-			if($(this).val()!=-1){
+			if($(this).val()!=-2){
 				$("#endAnswer").closest("div").removeClass("hide");
 			}
 			else{
@@ -341,29 +340,29 @@
 				}
 			}
 			$("#aChoise").empty();
-			if(typeof mapQA[$("option:selected",this).text()] == "undefined"){
+			if(typeof mapQA[$(this).val()] == "undefined"){
 				$("#aChoise").append("<option value='-1'></option>");
 				return;
 			}
-			var tempMapA = mapQA[$("option:selected",this).text()];
+			var tempMapA = mapQA[$(this).val()];
 			for(var i=0;i<tempMapA.length;i++){
 				$("#aChoise").append("<option value='"+tempMapA[i].value+"'>"+tempMapA[i].answer+"</option>");
 			}
 			$("#aChoise").change();
 		})
 		for(var i=0;i<listQA.length;i++){
-			if($("#qChoise option:contains('"+listQA[i].question+"')").length == 0){
-				$("#qChoise").append("<option>"+listQA[i].question+"</option>");
+			if($("#qChoise option[value='"+listQA[i].parent_tax_qa_id+"']").length == 0){
+				$("#qChoise").append("<option value='"+listQA[i].parent_tax_qa_id+"'>"+listQA[i].question+"</option>");
 			}
-			if(typeof mapQA[listQA[i].question]=="undefined"){
-				mapQA[listQA[i].question] = [{value:listQA[i].tax_qa_id,answer:listQA[i].answer}];
+			if(typeof mapQA[listQA[i].parent_tax_qa_id]=="undefined"){
+				mapQA[listQA[i].parent_tax_qa_id] = [{value:listQA[i].tax_qa_id,answer:listQA[i].answer}];
 			}
 			else{
-				mapQA[listQA[i].question].push({value:listQA[i].tax_qa_id,answer:listQA[i].answer});
+				mapQA[listQA[i].parent_tax_qa_id].push({value:listQA[i].tax_qa_id,answer:listQA[i].answer});
 			}
 		}
 		if(parentQA){
-			$("#qChoise option:contains(" + parentQA.question + ")").attr('selected', 'selected');
+			$("#qChoise option[value='" + parentQA.parent_tax_qa_id + "']").attr('selected', 'selected');
 			$("#qChoise").change();
 			$("#aChoise").val(parentQA.tax_qa_id);
 		}
