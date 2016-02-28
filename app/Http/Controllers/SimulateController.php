@@ -10,7 +10,7 @@ class SimulateController extends Controller
 	public function backSimulate(){
 		$curr = Input::get("id");
 		return ["result"=>DB::table("temp_tax_qa")
-		->select("tax_qa_id", "question","answer","priority")
+		->select("parent_tax_qa_id","tax_qa_id", "question","answer","priority")
 		->where("parent_tax_qa_id",function($query) use($curr){
 			$query
 				->select("parent_tax_qa_id")
@@ -32,7 +32,7 @@ class SimulateController extends Controller
 		}
 		else{
 			return ["endQuestion"=>false,"result"=>DB::table("temp_tax_qa")
-			->select("tax_qa_id", "question","answer","priority")
+			->select("tax_qa_id","parent_tax_qa_id", "question","answer","priority")
 			->where("parent_tax_qa_id",$curr)
 			->where("stsrc","!=","D")->get()];
 		}

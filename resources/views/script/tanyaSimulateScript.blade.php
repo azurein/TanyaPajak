@@ -4,6 +4,7 @@
 	function loadQuestion(qa){
 		$("#answerList").empty();
 		$("#questionText").empty();
+		console.log(qa);
 		currParent = qa[0].parent_tax_qa_id;
 		$("#questionText").text(qa[0].question);
 		for(var i=0;i<qa.length;i++){
@@ -48,10 +49,11 @@
 						url:"{{URL::to('api/simulasi/nextSimulate')}}",
 						data:"id="+$(".active").data("id"),
 						type:"POST",
+						lastId:currParent,
 						success:function(data){
 							if(data.endQuestion){
 								document.cookie = "lastId="+data.result;
-								location.href = "{{URL::to('admin/konfigurasi/simulate/calculate')}}";
+								location.href = "{{URL::to('admin/konfigurasi/simulate/calculate')}}/"+this.lastId;
 							}
 							else{
 								loadQuestion(data.result);

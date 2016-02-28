@@ -35,9 +35,9 @@
 							$("#taxContainer").empty();
 							for(var i=0;i<data.result.length;i++){
 								inc = Math.round((totalTransaction*parseInt(data.result[i].percentage)/100+parseInt(data.result[i].nominal))*100)/100;
-								$("#taxContainer").append($("<a href='{{URL::to("/kamus/")}}?key="+data.result[i].tax_type_name+"'><h5 class='col-md-6'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
+								$("#taxContainer").append($("<a  style='word-wrap:break-word;clear:both;' href='{{URL::to("/kamus/")}}?key="+data.result[i].tax_type_name+"'><h5 class='col-md-6'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
 								$("#taxContainer").append($("<h5 class='col-md-6'>Rp "+(inc+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-</h5></a>"));
-								totalTransaction += inc;
+								totalTransaction = Math.round((totalTransaction + inc) * 1e12) / 1e12;
 							}
 							$("#total").text("Rp "+(totalTransaction+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-");
 							$("#questionForm").addClass("hide");
@@ -64,7 +64,7 @@
 			$("#questionForm").removeClass("hide");
 			$("[con='calculateForm']").attr("id","linknext").removeClass("linknow");
 			$(this).nextAll(".questionLink").attr("id","linknext").removeClass("linknow");
-			$(this).nextAll(".questionLink").find(".userData").remove();
+			$(this).nextAll(".questionLink").remove();
 			loadNext(this,$(this).next());
 			$(this).prevAll("")
 			$(this).remove();

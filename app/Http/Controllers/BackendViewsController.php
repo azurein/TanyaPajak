@@ -67,15 +67,15 @@ left join temp_tax_type d ON c.tax_type_id = d.tax_type_id AND d.stsrc="A"
 	public function input_simulate(){
 		return view('pages.input_simulate');
 	}
-	public function tanya_simulate(){
+	public function tanya_simulate($lastId=-1){
 		$QA = DB::table("temp_tax_qa")->select("parent_tax_qa_id","tax_qa_id","question","answer","priority")
-					->where("stsrc","A")->where("parent_tax_qa_id","-1")
+					->where("stsrc","A")->where("parent_tax_qa_id",$lastId)
 					->orderBy('parent_tax_qa_id','ASC')->orderBy('priority','ASC')
 					->get();
 		return view('pages.tanya_simulate')->with("QA",json_encode($QA));
 	}
-	public function calculate_simulate(){
-		return view('pages.calculate_simulate');
+	public function calculate_simulate($lastId=-1){
+		return view('pages.calculate_simulate')->with("lastId",$lastId);
 	}
 	public function question_konfigurasi(){
 		$listQA = DB::table("temp_tax_qa")->select("parent_tax_qa_id","tax_qa_id","question","answer","priority")->where("stsrc","A")->where("parent_tax_qa_id",function($q){

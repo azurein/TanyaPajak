@@ -98,7 +98,7 @@
 								<h5 class="col-md-6" id="transactionTotal"></h5>
 								<div id="taxContainer">
 								</div>
-								<div id="totalContainer">
+								<div id="totalContainer" style="clear:both">
 									<h4 style="margin:0" class="col-md-5">Total Pajak</h4>
 									<h3 style="margin:0" class=" col-md-7" id="total">Rp 170,000.-</h3>
 								</div>

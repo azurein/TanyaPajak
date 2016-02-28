@@ -37,7 +37,9 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth.basic'), function()
 		{	
 			Route::get("/","BackendViewsController@input_simulate");
 			Route::get("tanya","BackendViewsController@tanya_simulate");
+			Route::get("tanya/{lastId}","BackendViewsController@tanya_simulate");
 			Route::get("calculate","BackendViewsController@calculate_simulate");
+			Route::get("calculate/{lastId}","BackendViewsController@calculate_simulate");
 		});
 		Route::get("question","BackendViewsController@question_konfigurasi");
 	});

@@ -1,6 +1,7 @@
 @section("script")
 <script>
 	var totalTransaction;
+	var lastId = {{$lastId}};
 	$(document).ready(function(){
 		var split = document.cookie.split("; ");
 		var tempType;
@@ -22,7 +23,7 @@
 						var inc = 0;
 						for(var i=0;i<data.result.length;i++){
 							inc = Math.round((totalTransaction*parseInt(data.result[i].percentage)/100+parseInt(data.result[i].nominal))*100)/100;
-							$("#taxContainer").append($("<h5 class='col-md-6'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
+							$("#taxContainer").append($("<h5 class='col-md-6' style='word-wrap:break-word;clear:both;'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
 							$("#taxContainer").append($("<h5 class='col-md-6'>Rp "+(inc+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-</h5>"));
 							totalTransaction = Math.round((totalTransaction + inc) * 1e12) / 1e12;
 						}
@@ -40,6 +41,9 @@
 					location.href = "{{URL::to('admin/konfigurasi/')}}";
 				}
 			})
+		})
+		$("#backButton").click(function(){
+			location.href='{{URL::to('admin/konfigurasi/simulate/tanya')}}/'+(lastId?lastId:"");
 		})
 	})
 </script>
