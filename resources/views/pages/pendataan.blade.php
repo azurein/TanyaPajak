@@ -5,6 +5,9 @@
 <div class="page-header">
 	<h3>Pendataan Jenis Pajak</h3>
 </div>
+<button type="button" class="btn btn-default col-md-4" onclick="location.href='{{ URL::to('/admin/pendataan/add/') }}';">Add New</button>
+<button type="button" class="btn btn-default col-md-4" id="editSelected">Edit Selected</button>
+<button type="button" class="btn btn-default col-md-4" id="deleteSelected">Delete Selected</button>
 <table class="table table-bordered table-striped" id="taxList">
 	<thead>
 		<tr>
@@ -45,15 +48,6 @@
 			</td>
 		</tr>
 	</tbody>
-	<tfoot>
-		<tr>
-			<td colspan="6">
-				<button type="button" class="btn btn-default" onclick="location.href='{{ URL::to('/admin/pendataan/add/') }}';">Add New</button>
-				<button type="button" class="btn btn-default" id="editSelected">Edit Selected</button>
-				<button type="button" class="btn btn-default" id="deleteSelected">Delete Selected</button>
-			</td>
-		</tr>
-	</tfoot>
 </table>
 <div class="alert alert-success hide" id="successMessage"></div>
 <div class="alert alert-danger hide" id="warningMessage"></div>

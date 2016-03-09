@@ -97,6 +97,7 @@ Route::group(array('prefix' => 'api', 'before' => 'auth.basic'), function()
 	Route::post('konfigurasi/incPriority', 'KonfigurasiController@incPriority');
 	Route::post('konfigurasi/descPriority', 'KonfigurasiController@descPriority');
 	Route::post('konfigurasi/loadRel', 'KonfigurasiController@loadRel');
-	Route::post('rekap', 'RekapController@get_user');
+	Route::post('rekap/web', 'RekapController@get_user');
+	Route::post('rekap/mobile', 'RekapController@get_user_mobile');
 	Route::post('forgot', 'ForgotController@send_email');
 });

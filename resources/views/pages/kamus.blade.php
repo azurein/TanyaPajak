@@ -7,11 +7,8 @@
 		<div class="col-md-1"></div>
 		<div class="col-md-10"><br>
 			<div class="container container-table">
-				<div class="vertical-center-row" id="searchContainer" style="border: none;">
+				<div id="searchContainer" style="border: none;">
 					<br>
-					<div class="page-header" style="border: none; padding-bottom: 0px;">
-						<h4 style="text-align: left;">Kamus Jenis Pajak</h4>
-					</div>
 					<form>
 					<div class="input-group">
 							<input type="text" class="form-control" aria-describedby="basic-addon1" placeholder="Masukkan kata pencarian...">

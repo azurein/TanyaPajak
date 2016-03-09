@@ -213,7 +213,7 @@
 			}
 			var allActive = [];
 			var posy = $("rect[active='1']")[0].getAttribute("y");
-			$("rect[y="+posy+"]").each(function(i,e){
+			$("rect[y='"+posy+"']").each(function(i,e){
 				allActive.push(this.getAttribute("qNum"));
 			});
 			location.href='{{ URL::to("admin/konfigurasi/edit/1") }}?tes='+allActive;			

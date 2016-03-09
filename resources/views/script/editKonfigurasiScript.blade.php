@@ -19,6 +19,7 @@
 		$("#newType",newType).click(appendType);
 		$("#delType",newType).click(delType);
 		$("#typeContainer").append(newType);
+		$("#typeList",newType).change();
 	}
 	function delType(){
 		if($(".typeItem:visible").length<=1)return;
@@ -58,6 +59,12 @@
 		for(var i=0;i<listType.length;i++){
 			$("#typeList").append($("<option value='"+listType[i].tax_type_id+"'>"+listType[i].tax_type_name+"</option>").attr("percent",listType[i].percentage));
 		}
+		$("#typeList").change(function(e){
+			console.log($("option:selected",this).attr("percent"));
+			console.log($("#percent",$(this).closest(".typeItem")));
+			$("#percent",$(this).closest(".typeItem")).val($("option:selected",this).attr("percent"));
+		});
+		$("#typeList").trigger("change");
 		for(var i=0;i<qa.length;i++){
 			if($("#qText").val() == ""){
 				$("#qText").val(qa[i].question);
@@ -296,7 +303,6 @@
 					while($(".answerContainer").length>2){
 						$(".answerContainer:last").remove();
 					}
-					$(".typeItem #percent").val("");
 					$(".typeItem #nominal").val("");
 					$(".typeItem").removeAttr("detailId");
 					$(".answerContainer .iInput").val("");

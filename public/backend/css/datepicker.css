@@ -81,6 +81,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  min-width: 160px;
 }
 .datepicker table tr td,
 .datepicker table tr th {

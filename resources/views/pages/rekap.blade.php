@@ -38,6 +38,7 @@
 <button type="button" id="view" class="btn btn-default">View</button></div>
 <br><br>
 <div class="alert alert-danger hide" id="warningMessage"></div>
+<div class="alert alert-danger hide" id="mobileWarningMessage"></div>
 <table id="rekap" class="table table-bordered table-striped hide">
 	<thead>
 		<tr>

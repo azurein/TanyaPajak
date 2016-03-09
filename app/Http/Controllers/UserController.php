@@ -25,7 +25,8 @@ class UserController extends Controller
 								join gender b ON a.gender_id = b.gender_id AND b.stsrc="A"
 								join domicile c ON a.domicile_id = c.domicile_id AND c.stsrc="A"
 								join role d ON a.role_id = d.role_id AND d.stsrc="A"							
-								where a.stsrc = ?', ["A"]);
+								where a.stsrc = ?
+								order by role_id asc', ["A"]);
 		return $users;
 	}
     public function login()
@@ -120,7 +121,10 @@ class UserController extends Controller
 				'message' => "Full name ,Email and Birth date must be filled")
 			);
 		}
-		$insertId = DB::table("user")->insertGetId([
+		$checkExsist = DB::table("user")->select("user_id")->where("username",$username)->get();
+		$insertId ="";
+		if(count($checkExsist)>0){
+			DB::table("user")->where("username",$username)->update([
 			"username"=>$username,
 			"full_name"=>$name,
 			"gender_id"=>$gender,
@@ -130,12 +134,27 @@ class UserController extends Controller
 			"stsrc"=>"A",
 			"edit_by"=>DB::raw("NOW()"),
 			"edit_at"=>DB::raw("NOW()")
-		]);
+			]);
+			$insertId = $checkExsist[0]->user_id;
+		}
+		else{
+			$insertId = DB::table("user")->insertGetId([
+				"username"=>$username,
+				"full_name"=>$name,
+				"gender_id"=>$gender,
+				"birth_date"=>$birth,
+				"role_id"=>1,
+				"domicile_id"=>$domicile,
+				"stsrc"=>"A",
+				"edit_by"=>DB::raw("NOW()"),
+				"edit_at"=>DB::raw("NOW()")
+			]);
+		}
 		$insert = DB::table("user_log")->insert([
 					"user_id"=>$insertId,
 					"log_time"=>DB::raw("NOW()"),
 					"stsrc"=>"A",
-					"edit_by"=>Session::get("user_id"),
+					"edit_by"=>"frontend",
 					"edit_at"=>DB::raw("NOW()")
 					]);
 		if(!$insert){

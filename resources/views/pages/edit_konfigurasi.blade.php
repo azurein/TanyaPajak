@@ -48,7 +48,7 @@
 						</div>
 						<div class="col-md-3">
 							<label>Nominal <span class="typeNum">1</span></label>
-							<input id="nominal" type="text" class="form-control" placeholder="xx %">
+							<input id="nominal" type="text" class="form-control" placeholder="xx">
 						</div>
 						<div class="col-md-3">
 							<div class="form-group" style="line-height: 83px; padding-left:10px;">
@@ -65,6 +65,7 @@
 	</div>
 </div>
 <div class="form-group"><br>
+	<button type="button" class="btn btn-default" onclick="location.href='{{URL::to("admin/konfigurasi")}}';">Back</button>
 	<button type="button" class="btn btn-default" id="saveBtn">Save</button>
 </div>
 <div class="alert alert-success hide" id="successMessage"></div>

@@ -36,6 +36,7 @@
 					if(data.error){
 						$("#warningMessage",this.source).addClass("hide");
 						$("#successMessage",this.source).text(data.message).removeClass("hide");
+						location.href = "{{URL::to("admin/pendataan")}}";
 					}
 					else{
 						$("#successMessage",this.source).addClass("hide");

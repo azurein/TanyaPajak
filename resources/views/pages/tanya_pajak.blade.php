@@ -52,7 +52,7 @@
 								<span class="input-group-addon" style="cursor:pointer" id="searchButton"><i class="fa fa-search"></i></span>
 						</div>
 						<div class="input-group">
-							<div class="list-group" id="roleList">
+							<div class="list-group" id="roleList" style="height: 331px; overflow: auto;">
 							</div>
 						</div>
 					</form>
