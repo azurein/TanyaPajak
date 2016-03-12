@@ -128,14 +128,13 @@
 				position.x = 0;
 			}
 			if($("rect[qNum="+param[i].tax_qa_id+"]").length != 0)continue;
-			console.log(param[i].parent_tax_qa_id);
 			if(param[i].parent_tax_qa_id != -1 && $("rect[qNum="+param[i].parent_tax_qa_id+"]").length==0)continue;
 			if(param[i].question !== currQ){
 				indQuestion = param[i].tax_qa_id;
 				if(param[i].parent_tax_qa_id == -1){
 					position.x = $("#relationContainer").width()*0.375;
 					tempSquare = createBlock(position,$("#relationContainer").width()/4,blockHeight,param[i].question,svg,svgNS);
-					tempSquare.setAttribute("qSet","q"+indQuestion);
+					tempSquare.setAttribute("qSet",indQuestion);
 					tempSquare.setAttribute("pId",param[i].parent_tax_qa_id);
 					tempSquare.setAttribute("squareType",0);
 					questionPos = $.extend(true, {}, position);
@@ -154,7 +153,7 @@
 						y:position.y},svg,svgNS);
 					
 					tempSquare = createBlock(position,$("rect[qNum="+param[i].parent_tax_qa_id+"]").attr("width"),blockHeight,param[i].question,svg,svgNS);
-					tempSquare.setAttribute("qSet","q"+indQuestion);
+					tempSquare.setAttribute("qSet",indQuestion);
 					tempSquare.setAttribute("pId",param[i].parent_tax_qa_id);
 					tempSquare.setAttribute("squareType",0);
 					questionPos = $.extend(true, {}, position);
@@ -170,7 +169,7 @@
 			tempPos.x+=$(tempSquare).attr("width")/2;
 			createArrow(questionPos,tempPos,svg,svgNS);
 			tempSquare.setAttribute("qNum",param[i].tax_qa_id);
-			tempSquare.setAttribute("qSet","q"+indQuestion);
+			tempSquare.setAttribute("qSet",indQuestion);
 			tempSquare.setAttribute("squareType",1);
 			position.x += tempSquare.getBBox().width + 10;
 			$(tempSquare).contextmenu(function(e){
@@ -217,7 +216,7 @@
 			}
 			else{
 				var qSet = $("rect[active='1']")[0].getAttribute("qSet");
-				$("rect[qSet='"+qSet+"']").each(function(i,e){
+				$("rect[qSet="+qSet+"]").each(function(i,e){
 					allActive.push(this.getAttribute("qNum"));
 				});
 				location.href='{{ URL::to("admin/konfigurasi/edit/1") }}?editQA='+allActive;
@@ -234,7 +233,6 @@
 					data:{delNum:qNum},
 					type:"POST",
 					success:function(data){
-						console.log(data);
 						if(data.error){
 							location.href = "{{ URL::to('admin/konfigurasi/view') }}";
 						}
@@ -278,24 +276,9 @@
 					}
 				})
 			}
-			/*$.ajax({
-				headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
-				url:"{{URL::to('api/konfigurasi/del')}}",
-				data:{delNum:qNum},
-				type:"POST",
-				success:function(data){
-					if(data.error){
-						location.href = "{{ URL::to('admin/konfigurasi/view') }}";
-					}
-					else{
-						$("#warningMessage").text(data.message).removeClass("hide");
-					}
-				}
-			})*/
 		})
 		$("#incPriority").click(function(){
 			var num = $(this).closest("div").data("qNum");
-			console.log(num);
 			$.ajax({
 				headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
 				url:"{{URL::to('api/konfigurasi/incPriority')}}",
@@ -310,7 +293,6 @@
 		})
 		$("#decPriority").click(function(){
 			var num = $(this).closest("div").data("qNum");
-			console.log(num);
 			$.ajax({
 				headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
 				url:"{{URL::to('api/konfigurasi/descPriority')}}",

@@ -292,7 +292,6 @@
 				data:{qaID:$(this).val()},
 				type:"POST",
 				success:function(data){
-					console.log(data);
 					if($(".typeItem").length>1){
 						$(".typeItem:first button").closest(".col-md-3").remove();
 						$(".typeItem:first").append($("#newType:visible").closest(".col-md-3"));

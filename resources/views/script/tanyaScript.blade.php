@@ -35,7 +35,7 @@
 							$("#taxContainer").empty();
 							for(var i=0;i<data.result.length;i++){
 								inc = Math.round(totalTransaction*parseInt(data.result[i].percentage)/100+parseInt(data.result[i].nominal));
-								$("#taxContainer").append($("<a  style='word-wrap:break-word;clear:both;' href='{{URL::to("/kamus/")}}?key="+data.result[i].tax_type_name+"'><h5 class='col-md-6'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
+								$("#taxContainer").append($("<a href='{{URL::to("/kamus/")}}?key="+data.result[i].tax_type_name+"'><h5 class='col-md-6' style='word-wrap:break-word;clear:both;'>"+data.result[i].tax_type_name+"("+data.result[i].percentage+"% + "+data.result[i].nominal+")</h5>"));
 								$("#taxContainer").append($("<h5 class='col-md-6'>Rp "+(inc+"").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")+".-</h5></a>"));
 								totalTransaction = Math.round((totalTransaction + inc) * 1e12) / 1e12;
 							}
@@ -141,6 +141,15 @@
 							$("[con='transactionForm']").addClass("linknow").removeAttr("id");
 							$("[con='roleForm'] .userData").remove();
 							$("[con='roleForm'] li").append($("<span class='userData'> "+$(this).text()+"</span>"));
+							$.ajax({
+								headers:{'X-CSRF-Token': '{!! csrf_token() !!}' },
+								url:"{{URL::to('api/user/updateRole')}}",
+								data:{
+									NewRole:$(this).data("id"),
+									User:userId
+								},
+								type:"POST"
+							})
 						})
 						$("#roleList").append(newRole);
 					}

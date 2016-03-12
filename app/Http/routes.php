@@ -85,6 +85,7 @@ Route::group(array('prefix' => 'api', 'before' => 'auth.basic'), function()
 	Route::post('user/loadUser', 'UserController@loadUser');
 	Route::post('user/edit', 'UserController@edit');
 	Route::post('user/delete', 'UserController@delete');
+	Route::post('user/updateRole', 'UserController@updateRole');
 	Route::post('konfigurasi/delQ', 'KonfigurasiController@delQ');
 	Route::post('konfigurasi/delType', 'KonfigurasiController@delType');
 	Route::post('konfigurasi/add', 'KonfigurasiController@add');

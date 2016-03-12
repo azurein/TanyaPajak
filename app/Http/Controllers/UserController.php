@@ -242,4 +242,10 @@ class UserController extends Controller
 			200
 		);
     }
+    public function updateRole()
+    {
+		$role = Input::get("NewRole");
+		$user = Input::get("User");
+		DB::table("user")->where('user_id', $user)->update(["role_id"=>$role]);
+    }
 }
