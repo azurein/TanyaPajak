@@ -102,10 +102,10 @@
 											$(".iGrowthMobile",newRow).text(prevCount==0?0:Math.round(((data.log_data[i].countUser - prevCount)/prevCount*100)*100)/100);
 											$(".iTime",newRow).text(data.log_data[i].groupTime);
 											var checkTime = $("table tbody tr:visible:first");
-											while(checkTime.attr("groupTime")+0<data.log_data[i].groupTime&&!checkTime.is(":last-child")){
+											while(checkTime.attr("groupTime")<data.log_data[i].groupTime&&!checkTime.is(":last-child")){
 												checkTime = checkTime.next();
 											}
-											if(checkTime.is(":last-child")){
+											if(checkTime.is(":last-child")&&data.log_data[i].groupTime>checkTime.attr("groupTime")){
 												$("table tbody").append(newRow);
 											}
 											else{
@@ -114,7 +114,6 @@
 										}
 									}
 									prevCount = data.log_data[i].countUser;
-									$("tbody",table).append(newRow);
 								}
 							}
 							else{

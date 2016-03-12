@@ -49,20 +49,38 @@ left join temp_tax_type d ON c.tax_type_id = d.tax_type_id AND d.stsrc="A"
 		return view('pages.view_konfigurasi')->with("question",json_encode($question));
 	}
 	public function edit_konfigurasi($param = 0){
-		$selected = explode(',',trim(Input::get("tes"),','));
 		$listQA = DB::table("temp_tax_qa")->select("parent_tax_qa_id","tax_qa_id","question","answer","priority")->where("stsrc","A")->get();
-		$selectedQA = DB::table("temp_tax_qa")->select("parent_tax_qa_id","tax_qa_id","question","answer","priority")->where("stsrc","A")->whereIn("tax_qa_id",$selected)->get();
-		$selectedParent = [""];
-		if(count($selectedQA)>0)
-			$selectedParent = DB::table("temp_tax_qa")->select("tax_qa_id","parent_tax_qa_id","question","answer")->where("stsrc","A")->where("tax_qa_id",$selectedQA[0]->parent_tax_qa_id)->get();
 		$listType = DB::table("temp_tax_type")->select("tax_type_id","tax_type_name","percentage")->where("stsrc","A")->get();
-		return view('pages.edit_konfigurasi')->with([
-			"param"=>$param,
-			"listQA"=>json_encode($listQA),
-			"selectedQA"=>json_encode($selectedQA),
-			"listType"=>json_encode($listType),
-			"selectedParent"=>json_encode(count($selectedParent)>0?$selectedParent[0]:null)
-			]);
+		if(Input::get("editDetail")){
+			$selected = Input::get("editDetail");
+			$selected = DB::table("temp_tax_qa_detail")->join("temp_tax_qa","temp_tax_qa_detail.tax_qa_id","=","temp_tax_qa.tax_qa_id")
+							->select("temp_tax_qa.tax_qa_id","parent_tax_qa_id")
+							->where("tax_qa_detail_id",$selected)
+							->where("temp_tax_qa_detail.stsrc","A")->where("temp_tax_qa.stsrc","A")->get();
+			return view('pages.edit_konfigurasi')->with([
+				"param"=>$param,
+				"listQA"=>json_encode($listQA),
+				"selectedQA"=>json_encode(""),
+				"listType"=>json_encode($listType),
+				"selectedParent"=>json_encode($selected[0]),
+				"typeEdit"=>1
+				]);
+		}
+		else{
+			$selected = explode(',',trim(Input::get("editQA"),','));
+			$selectedQA = DB::table("temp_tax_qa")->select("parent_tax_qa_id","tax_qa_id","question","answer","priority")->where("stsrc","A")->whereIn("tax_qa_id",$selected)->get();
+			$selectedParent = [""];
+			if(count($selectedQA)>0)
+				$selectedParent = DB::table("temp_tax_qa")->select("tax_qa_id","parent_tax_qa_id","question","answer")->where("stsrc","A")->where("tax_qa_id",$selectedQA[0]->parent_tax_qa_id)->get();
+			return view('pages.edit_konfigurasi')->with([
+				"param"=>$param,
+				"listQA"=>json_encode($listQA),
+				"selectedQA"=>json_encode($selectedQA),
+				"listType"=>json_encode($listType),
+				"selectedParent"=>json_encode(count($selectedParent)>0?$selectedParent[0]:null),
+				"typeEdit"=>0
+				]);
+		}
 	}
 	public function input_simulate(){
 		return view('pages.input_simulate');
@@ -75,7 +93,7 @@ left join temp_tax_type d ON c.tax_type_id = d.tax_type_id AND d.stsrc="A"
 		return view('pages.tanya_simulate')->with("QA",json_encode($QA));
 	}
 	public function calculate_simulate($lastId=-1){
-		return view('pages.calculate_simulate')->with("lastId",$lastId);
+		return view('pages.calculate_simulate')->with("lastId",$lastId."");
 	}
 	public function question_konfigurasi(){
 		$listQA = DB::table("temp_tax_qa")->select("parent_tax_qa_id","tax_qa_id","question","answer","priority")->where("stsrc","A")->where("parent_tax_qa_id",function($q){

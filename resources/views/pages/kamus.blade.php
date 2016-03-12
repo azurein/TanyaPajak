@@ -7,7 +7,7 @@
 		<div class="col-md-1"></div>
 		<div class="col-md-10"><br>
 			<div class="container container-table">
-				<div id="searchContainer" style="border: none;">
+				<div id="searchContainer" style="border: none;margin-bottom:50px">
 					<br>
 					<form>
 					<div class="input-group">

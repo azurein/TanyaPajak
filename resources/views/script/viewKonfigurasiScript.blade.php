@@ -212,11 +212,16 @@
 				return;
 			}
 			var allActive = [];
-			var posy = $("rect[active='1']")[0].getAttribute("y");
-			$("rect[y='"+posy+"']").each(function(i,e){
-				allActive.push(this.getAttribute("qNum"));
-			});
-			location.href='{{ URL::to("admin/konfigurasi/edit/1") }}?tes='+allActive;			
+			if($("rect[active='1']")[0].getAttribute("squareType")=="2"){
+				location.href='{{ URL::to("admin/konfigurasi/edit/1") }}?editDetail='+$("rect[active='1']")[0].getAttribute("relId");
+			}
+			else{
+				var qSet = $("rect[active='1']")[0].getAttribute("qSet");
+				$("rect[qSet='"+qSet+"']").each(function(i,e){
+					allActive.push(this.getAttribute("qNum"));
+				});
+				location.href='{{ URL::to("admin/konfigurasi/edit/1") }}?editQA='+allActive;
+			}
 		})
 		$("#delKonfig").click(function(){
 			if(!confirm("Are you sure?"))return;

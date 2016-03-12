@@ -52,8 +52,7 @@
 						lastId:currParent,
 						success:function(data){
 							if(data.endQuestion){
-								document.cookie = "lastId="+data.result;
-								location.href = "{{URL::to('admin/konfigurasi/simulate/calculate')}}/"+this.lastId;
+								location.href = "{{URL::to('admin/konfigurasi/simulate/calculate')}}/"+this.lastId+"and"+data.result;
 							}
 							else{
 								loadQuestion(data.result);

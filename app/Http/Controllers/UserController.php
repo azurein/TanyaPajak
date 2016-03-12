@@ -52,7 +52,6 @@ class UserController extends Controller
 				'message' => "User must have Staff Role")
 			);
 		}
-		$log = DB::insert('INSERT INTO user_log VALUES(?,NOW(),?,?,NOW())', [$users[0]->user_id,"A",$users[0]->user_id]);
 		Session::put('user_id', $users[0]->user_id);
 		Session::put('role_id', $users[0]->role_id);
         return Response::json(array('error' => true),
@@ -132,7 +131,7 @@ class UserController extends Controller
 			"role_id"=>1,
 			"domicile_id"=>$domicile,
 			"stsrc"=>"A",
-			"edit_by"=>DB::raw("NOW()"),
+			"edit_by"=>Session::get("user_id"),
 			"edit_at"=>DB::raw("NOW()")
 			]);
 			$insertId = $checkExsist[0]->user_id;
@@ -146,7 +145,7 @@ class UserController extends Controller
 				"role_id"=>1,
 				"domicile_id"=>$domicile,
 				"stsrc"=>"A",
-				"edit_by"=>DB::raw("NOW()"),
+				"edit_by"=>Session::get("user_id"),
 				"edit_at"=>DB::raw("NOW()")
 			]);
 		}

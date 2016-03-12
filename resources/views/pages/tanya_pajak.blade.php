@@ -117,7 +117,7 @@
 		<div class="col-md-5"><br><br><br>
 			<div class="container-table">
 				<div class="row vertical-center-row" style="margin: 0; border: none;">
-					<ol>
+					<ol style="list-style-type:none">
 						<a class="linknow" con="profileForm"><li>Pengisian Data Diri</li></a>
 						<a id="linknext" con="roleForm"><li>Pilih Pekerjaan</li></a>
 						<a id="linknext" con="transactionForm"><li>Pengisian Data Transaksi</li></a>

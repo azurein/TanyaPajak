@@ -5,6 +5,7 @@
 	var parentQA = {!! $selectedParent !!};
 	var listQA = {!! $listQA !!};
 	var listType = {!! $listType !!};
+	var typeEdit = {!! $typeEdit !!};
 	var mapQA = {};
 	var listDelType = [];
 	var listDelQ = [];
@@ -60,8 +61,6 @@
 			$("#typeList").append($("<option value='"+listType[i].tax_type_id+"'>"+listType[i].tax_type_name+"</option>").attr("percent",listType[i].percentage));
 		}
 		$("#typeList").change(function(e){
-			console.log($("option:selected",this).attr("percent"));
-			console.log($("#percent",$(this).closest(".typeItem")));
 			$("#percent",$(this).closest(".typeItem")).val($("option:selected",this).attr("percent"));
 		});
 		$("#typeList").trigger("change");
@@ -293,6 +292,7 @@
 				data:{qaID:$(this).val()},
 				type:"POST",
 				success:function(data){
+					console.log(data);
 					if($(".typeItem").length>1){
 						$(".typeItem:first button").closest(".col-md-3").remove();
 						$(".typeItem:first").append($("#newType:visible").closest(".col-md-3"));
@@ -354,7 +354,11 @@
 			for(var i=0;i<tempMapA.length;i++){
 				$("#aChoise").append("<option value='"+tempMapA[i].value+"'>"+tempMapA[i].answer+"</option>");
 			}
+			if($(this).attr("changeChildVal")){
+				$("#aChoise").val($(this).attr("changeChildVal"));
+			}
 			$("#aChoise").change();
+			$(this).removeAttr("changeChildVal");
 		})
 		for(var i=0;i<listQA.length;i++){
 			if($("#qChoise option[value='"+listQA[i].parent_tax_qa_id+"']").length == 0){
@@ -369,8 +373,8 @@
 		}
 		if(parentQA){
 			$("#qChoise option[value='" + parentQA.parent_tax_qa_id + "']").attr('selected', 'selected');
+			$("#qChoise").attr("changeChildVal",parentQA.tax_qa_id);
 			$("#qChoise").change();
-			$("#aChoise").val(parentQA.tax_qa_id);
 		}
 	})
 </script>
