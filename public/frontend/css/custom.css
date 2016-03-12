@@ -242,6 +242,18 @@ p.copyright {
 	color: #DCDCDC;
 }
 
+.linknow li {
+	width: 300px;
+	padding: 5px;
+	border: solid 1px #0C9900;
+}
+
+#linknext li {
+	width: 300px;
+	padding: 5px;
+	border: solid 1px #DCDCDC;
+}
+
 .row{
 	margin-right:0;
 }
