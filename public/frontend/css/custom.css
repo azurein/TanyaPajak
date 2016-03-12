@@ -246,12 +246,14 @@ p.copyright {
 	width: 300px;
 	padding: 5px;
 	border: solid 1px #0C9900;
+	margin-bottom: 10px;
 }
 
 #linknext li {
 	width: 300px;
 	padding: 5px;
 	border: solid 1px #DCDCDC;
+	margin-bottom: 10px;
 }
 
 .row{
