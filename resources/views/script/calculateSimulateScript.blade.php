@@ -38,7 +38,7 @@
 				url:"{{URL::to('api/simulasi/publish')}}",
 				type:"POST",
 				success:function(data){					
-					location.href = "{{URL::to('admin/konfigurasi/')}}";
+					//location.href = "{{URL::to('admin/konfigurasi/')}}";
 				}
 			})
 		})
